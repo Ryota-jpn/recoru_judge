@@ -40,7 +40,20 @@ password.send_keys(PASSWORD)
 # ログインボタンを押下
 submit.click()
 
-time.sleep(5)
+time.sleep(2)
+
+# 各種勤務時間を取得
+t = driver.find_element(By.ID, "AC_SUMMARY_1")
+sum1 = t.find_elements(By.CLASS_NAME, "h-attendanceChart-summary-flex-content")
+a = {}
+for s in sum1:
+    title = s.find_element(By.CLASS_NAME, "title")
+    value = s.find_element(By.CLASS_NAME, "data")
+    a[title.text] = value.text
+
+
 
 # ブラウザを閉じる
 driver.close()
+
+print(a)
