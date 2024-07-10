@@ -5,6 +5,7 @@ import time
 import chromedriver_binary
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # 環境変数を読み込む
 load_dotenv()
@@ -47,13 +48,20 @@ t = driver.find_element(By.ID, "AC_SUMMARY_1")
 sum1 = t.find_elements(By.CLASS_NAME, "h-attendanceChart-summary-flex-content")
 a = {}
 for s in sum1:
-    title = s.find_element(By.CLASS_NAME, "title")
-    value = s.find_element(By.CLASS_NAME, "data")
-    a[title.text] = value.text
+    title = s.find_element(By.CLASS_NAME, "title").text
+    colon = ':'
+    value = s.find_element(By.CLASS_NAME, "data").text
+    hours = int(value[:value.find(colon)])
+    minutes = int(value[value.find(colon)+1:])
+    times = hours * 60 + minutes
+    a[title] = times
 
 
 
 # ブラウザを閉じる
 driver.close()
 
-print(a)
+
+
+
+print(a['所定時間']/2)
