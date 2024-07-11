@@ -6,6 +6,7 @@ import chromedriver_binary
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
+from selenium.common.exceptions import WebDriverException
 
 # 環境変数を読み込む
 load_dotenv()
@@ -18,50 +19,53 @@ PASSWORD = os.environ['PASSWORD']
 driver = webdriver.Chrome()
 
 # URL先に移動
-driver.get(URL)
+try:
+    driver.get(URL)
 
-time.sleep(1)
+    time.sleep(1)
 
 # 各種入力フォームを取得
-contract_id = driver.find_element(By.NAME, "contractId")  # 契約ID
-auth_id = driver.find_element(By.NAME, "authId")  # ログインIDまたはメールアドレス
-password = driver.find_element(By.NAME, "password")  # パスワード
-submit = driver.find_element(By.CLASS_NAME, "common-btn")  # ログインボタン
+    contract_id = driver.find_element(By.NAME, "contractId")  # 契約ID
+    auth_id = driver.find_element(By.NAME, "authId")  # ログインIDまたはメールアドレス
+    password = driver.find_element(By.NAME, "password")  # パスワード
+    submit = driver.find_element(By.CLASS_NAME, "common-btn")  # ログインボタン
 
 # 入力フォームを空にする
-contract_id.clear()
-auth_id.clear()
-password.clear()
+    contract_id.clear()
+    auth_id.clear()
+    password.clear()
 
 # 各種入力情報をセット
-contract_id.send_keys(CONTRACT_ID)
-auth_id.send_keys(AUTH_ID)
-password.send_keys(PASSWORD)
+    contract_id.send_keys(CONTRACT_ID)
+    auth_id.send_keys(AUTH_ID)
+    password.send_keys(PASSWORD)
 
 # ログインボタンを押下
-submit.click()
+    submit.click()
 
-time.sleep(2)
+    time.sleep(2)
 
 # 各種勤務時間を取得
-t = driver.find_element(By.ID, "AC_SUMMARY_1")
-sum1 = t.find_elements(By.CLASS_NAME, "h-attendanceChart-summary-flex-content")
-a = {}
-for s in sum1:
-    title = s.find_element(By.CLASS_NAME, "title").text
-    colon = ':'
-    value = s.find_element(By.CLASS_NAME, "data").text
-    hours = int(value[:value.find(colon)])
-    minutes = int(value[value.find(colon)+1:])
-    times = hours * 60 + minutes
-    a[title] = times
+    contents = driver.find_element(By.ID, "AC_SUMMARY_1")
+    summary = contents.find_elements(By.CLASS_NAME, "h-attendanceChart-summary-flex-content")
+    work_time = {}
+    for s in summary:
+        title = s.find_element(By.CLASS_NAME, "title").text
+        colon = ':'
+        value = s.find_element(By.CLASS_NAME, "data").text
+        hours = int(value[:value.find(colon)])
+        minutes = int(value[value.find(colon)+1:])
+        times = hours * 60 + minutes
+        work_time[title] = times
 
 
+except WebDriverException:
+    print('例外が発生しました。処理を中止します。')
+    driver.close()
 
+finally:
 # ブラウザを閉じる
-driver.close()
+    driver.close()
 
 
-
-
-print(a['所定時間']/2)
+print(work_time['所定時間']/2)
