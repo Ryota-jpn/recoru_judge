@@ -11,15 +11,16 @@ from selenium.common.exceptions import WebDriverException
 import judege_time
 
 
+URL = os.environ['URL']
 
-def get_work_time(url,users):
+def get_work_time(users):
     user_results = []
     for user in users:
     # URL先に移動
         try:
             # # ブラウザの起動
             driver = webdriver.Chrome()
-            driver.get(url)
+            driver.get(URL)
 
             time.sleep(1)
 
@@ -36,13 +37,13 @@ def get_work_time(url,users):
 
         # 各種入力情報をセット
             contract_id.send_keys(user[0])
-            auth_id.send_keys(user[1])
-            password.send_keys(user[2])
+            auth_id.send_keys(user[2])
+            password.send_keys(user[3])
 
         # ログインボタンを押下
             submit.click()
 
-            time.sleep(2)
+            time.sleep(1)
 
         # 各種勤務時間を取得
             contents = driver.find_element(By.ID, "AC_SUMMARY_1")

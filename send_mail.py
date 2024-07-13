@@ -8,9 +8,9 @@ GACCOUNT = os.environ['GACCOUNT']
 GPASSWORD = os.environ['GPASSWORD']
 
 # メイン
-def send_email(user):
-    send_address = user[1]
-    html = make_mail_msg.make_html(user)
+def send_email(user_result):
+    send_address = user_result[2]
+    html = make_mail_msg.make_html(user_result)
     msg = make_mime_text(
         mail_to = send_address,
         subject = "【重要】今月の労働時間について",

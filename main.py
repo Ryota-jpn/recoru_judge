@@ -9,22 +9,18 @@ from email.mime.text import MIMEText
 
 # 環境変数を読み込む
 load_dotenv()
-URL = os.environ['URL']
-HOST = os.environ['HOST']
-USER = os.environ['USER']
-PASSWORD = os.environ['PASSWORD']
-DATABASE = os.environ['DATABASE']
 
 # DB内のユーザー情報を取得
-users = mysql_conn.user_select(HOST, USER, PASSWORD, DATABASE)
+users = mysql_conn.user_select()
 
 # ユーザーごとの残業時間の判定を取得
-user_results = get_result.get_work_time(URL,users)
+user_results = get_result.get_work_time(users)
 
-for user in user_results:
-    if(user[6]):
-        print('TRUE')
-    else:
-        send_mail.send_email(user)
+for user_result in user_results:
+    if(user_result[6]):
+        send_mail.send_email(user_result)
 
 print(user_results)
+# [('170096', '木名瀬凌太', 'kinase.ryota@alhinc.jp', 10560, 5280.0, 4890, False)]
+
+mysql_conn.results_insert(user_results)
