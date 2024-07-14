@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 from datetime import timedelta
 from selenium.common.exceptions import WebDriverException
-import judege_time
+import judge_time
 
 URL = os.environ['URL']
 
@@ -59,8 +59,8 @@ def get_work_time(users):
 
             driver.close()
 
-            result = judege_time.judge(work_time)
-            user_result = (user[0],user[1],user[2],user[4],work_time['所定時間'],work_time['所定時間'] / 2,work_time['労働時間'],result)
+            result = judge_time.judge(work_time)
+            user_result = (user[0],user[1],user[2],user[4],work_time['所定時間'],work_time['労働時間'],result)
             user_results.append(user_result)
 
         except WebDriverException:

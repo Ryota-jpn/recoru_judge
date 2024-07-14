@@ -16,11 +16,11 @@ def main():
     # ユーザーごとの残業時間の判定を取得
     user_results = get_result.get_work_time(users)
 
-    # user_results = (ID,氏名,メールアドレス,LINEアカウント,所定労働時間,所定労働時間（半月分）,実労働時間,判定結果)
+    # user_results = (ID,氏名,メールアドレス,LINEアカウント,所定労働時間,実労働時間,判定結果)
 
     # 残業時間が超過しているUSERのみメール通知
     for user_result in user_results:
-        if(user_result[7]):
+        if(user_result[6]):
             send_mail.send_email(user_result)
             send_line.send_line(user_result)
 
