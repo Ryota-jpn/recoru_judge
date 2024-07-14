@@ -9,6 +9,7 @@ USER = os.environ['USER']
 PASSWORD = os.environ['PASSWORD']
 DATABASE = os.environ['DATABASE']
 
+# USER情報のSELECT
 def user_select():
     try:
         # MySQLに接続
@@ -24,15 +25,11 @@ def user_select():
         cursor = conn.cursor()
 
         # クエリ実行
-        select_query = "SELECT CONTRACT_ID, NAME, EMAIL, PASSWORD FROM USERS;"
+        select_query = "SELECT CONTRACT_ID, NAME, EMAIL, PASSWORD, LINE_ACC FROM USERS;"
         cursor.execute(select_query)
 
         # 結果を取得
         users = cursor.fetchall()
-
-        # 結果を表示
-        for user in users:
-            print(user)
 
         # 接続を閉じる
         cursor.close()
@@ -48,6 +45,7 @@ def user_select():
         conn.close()
         sys.exit()
 
+# 労働時間の判定結果をINSERT
 def results_insert(user_results):
     tokyo_tz = datetime.timezone(datetime.timedelta(hours=9))
     dt = datetime.datetime.now(tokyo_tz)
@@ -85,12 +83,12 @@ def results_insert(user_results):
         """
 
         for result in user_results:
-            if(result[6]):
+            if(result[7]):
                 judge = "NG"
             else:
                 judge = "OK"
 
-            data = (result[0],result[1],year,month,category,result[3]/60,result[5]/60,judge)
+            data = (result[0],result[1],year,month,category,result[4]/60,result[6]/60,judge)
             cursor.execute(insert_query,data)
 
         conn.commit()
