@@ -4,7 +4,7 @@ from selenium.webdriver.chrome import service
 import time
 import chromedriver_binary
 import os
-
+import datetime
 from dotenv import load_dotenv
 from datetime import timedelta
 from selenium.common.exceptions import WebDriverException
@@ -59,7 +59,14 @@ def get_work_time(users):
 
             driver.close()
 
-            result = judge_time.judge(work_time)
+            tokyo_tz = datetime.timezone(datetime.timedelta(hours=9))
+            today = datetime.datetime.now(tokyo_tz).day
+
+            if(today == 15):
+                result = judge_time.judge_middle(work_time)
+            else:
+                result = judge_time.judge_end(work_time)
+
             user_result = (user[0],user[1],user[2],user[4],work_time['所定時間'],work_time['労働時間'],result)
             user_results.append(user_result)
 
