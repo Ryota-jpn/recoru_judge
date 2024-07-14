@@ -4,7 +4,7 @@ import os
 URL = os.environ['URL']
 
 def send_line(user_result):
-    msg = """
+    msg = f"""
     勤務時間が超過しています。
     至急、RecoRuをご確認ください。
     {URL}
