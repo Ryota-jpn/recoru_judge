@@ -1,9 +1,11 @@
-import mysql.connector
+import pymysql
 import sys
 import os
 import datetime
+from dotenv import load_dotenv
 
-
+# 環境変数を読み込む
+load_dotenv()
 HOST = os.environ['HOST']
 USER = os.environ['USER']
 PASSWORD = os.environ['PASSWORD']
@@ -13,7 +15,7 @@ DATABASE = os.environ['DATABASE']
 def user_select():
     try:
         # MySQLに接続
-        conn = mysql.connector.connect(
+        conn = pymysql.connect(
             host = HOST,
             user = USER,
             password = PASSWORD,
@@ -58,7 +60,7 @@ def results_insert(user_results):
 
     try:
         # MySQLに接続
-        conn = mysql.connector.connect(
+        conn = pymysql.connect(
             host = HOST,
             user = USER,
             password = PASSWORD,

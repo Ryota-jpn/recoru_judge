@@ -9,7 +9,11 @@ from dotenv import load_dotenv
 from datetime import timedelta
 from selenium.common.exceptions import WebDriverException
 import judge_time
+from dotenv import load_dotenv
 
+
+# 環境変数を読み込む
+load_dotenv()
 URL = os.environ['URL']
 
 def get_work_time(users):
@@ -18,7 +22,11 @@ def get_work_time(users):
     # URL先に移動
         try:
             # # ブラウザの起動
-            driver = webdriver.Chrome()
+            options = webdriver.ChromeOptions()
+            options.add_argument("--headless")
+
+
+            driver = webdriver.Chrome(options=options)
             driver.get(URL)
 
             time.sleep(1)
@@ -43,6 +51,7 @@ def get_work_time(users):
             submit.click()
 
             time.sleep(1)
+            print("勤務時間取得中......")
 
         # 各種勤務時間を取得
             contents = driver.find_element(By.ID, "AC_SUMMARY_1")
