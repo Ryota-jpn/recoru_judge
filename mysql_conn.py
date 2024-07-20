@@ -1,9 +1,11 @@
-import mysql.connector
+import pymysql
 import sys
 import os
 import datetime
+from dotenv import load_dotenv
 
-
+# 環境変数を読み込む
+load_dotenv()
 HOST = os.environ['HOST']
 USER = os.environ['USER']
 PASSWORD = os.environ['PASSWORD']
@@ -13,7 +15,7 @@ DATABASE = os.environ['DATABASE']
 def user_select():
     try:
         # MySQLに接続
-        conn = mysql.connector.connect(
+        conn = pymysql.connect(
             host = HOST,
             user = USER,
             password = PASSWORD,
@@ -51,14 +53,14 @@ def results_insert(user_results):
     dt = datetime.datetime.now(tokyo_tz)
     year = dt.year
     month = dt.month
-    if(dt.day < 16):
+    if(dt.day == 15):
         category = "Middle"
     else:
         category = "End"
 
     try:
         # MySQLに接続
-        conn = mysql.connector.connect(
+        conn = pymysql.connect(
             host = HOST,
             user = USER,
             password = PASSWORD,
@@ -83,12 +85,12 @@ def results_insert(user_results):
         """
 
         for result in user_results:
-            if(result[7]):
+            if(result[6]):
                 judge = "NG"
             else:
                 judge = "OK"
 
-            data = (result[0],result[1],year,month,category,result[4]/60,result[6]/60,judge)
+            data = (result[0],result[1],year,month,category,result[4]/60,result[5]/60,judge)
             cursor.execute(insert_query,data)
 
         conn.commit()

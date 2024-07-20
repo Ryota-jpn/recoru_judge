@@ -4,12 +4,16 @@ from selenium.webdriver.chrome import service
 import time
 import chromedriver_binary
 import os
-
+import datetime
 from dotenv import load_dotenv
 from datetime import timedelta
 from selenium.common.exceptions import WebDriverException
-import judege_time
+import judge_time
+from dotenv import load_dotenv
 
+
+# 環境変数を読み込む
+load_dotenv()
 URL = os.environ['URL']
 
 def get_work_time(users):
@@ -18,7 +22,11 @@ def get_work_time(users):
     # URL先に移動
         try:
             # # ブラウザの起動
-            driver = webdriver.Chrome()
+            options = webdriver.ChromeOptions()
+            options.add_argument("--headless")
+
+
+            driver = webdriver.Chrome(options=options)
             driver.get(URL)
 
             time.sleep(1)
@@ -43,6 +51,7 @@ def get_work_time(users):
             submit.click()
 
             time.sleep(1)
+            print("勤務時間取得中......")
 
         # 各種勤務時間を取得
             contents = driver.find_element(By.ID, "AC_SUMMARY_1")
@@ -59,8 +68,15 @@ def get_work_time(users):
 
             driver.close()
 
-            result = judege_time.judge(work_time)
-            user_result = (user[0],user[1],user[2],user[4],work_time['所定時間'],work_time['所定時間'] / 2,work_time['労働時間'],result)
+            tokyo_tz = datetime.timezone(datetime.timedelta(hours=9))
+            today = datetime.datetime.now(tokyo_tz).day
+
+            if(today == 15):
+                result = judge_time.judge_middle(work_time)
+            else:
+                result = judge_time.judge_end(work_time)
+
+            user_result = (user[0],user[1],user[2],user[4],work_time['所定時間'],work_time['労働時間'],result)
             user_results.append(user_result)
 
         except WebDriverException:
